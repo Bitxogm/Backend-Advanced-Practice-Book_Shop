@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Ejecutar verificación de secretos
+echo "🔍 Verificando secretos..."
+./scripts/check-secrets.sh || exit 1
+
+# Ejecutar lint-staged (ESLint y Prettier)
+echo "✨ Ejecutando ESLint y Prettier en archivos staged..."
+npx lint-staged || exit 1
+
+echo "✅ Pre-commit hooks completados exitosamente!"
+
