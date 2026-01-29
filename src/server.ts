@@ -1,37 +1,74 @@
-import express, { Application, Request, Response } from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { connectDB } from './config/database';
+/**
+ * SERVIDOR PRINCIPAL (SERVER)
+ *
+ * Este es el archivo principal de la aplicación.
+ * Aquí configuramos Express, conectamos la base de datos y arrancamos el servidor.
+ *
+ * Flujo de ejecución:
+ * 1. Crear la app de Express
+ * 2. Configurar middlewares (express.json)
+ * 3. Registrar rutas (/books)
+ * 4. Conectar a MongoDB
+ * 5. Arrancar el servidor en el puerto especificado
+ */
 
-dotenv.config();
+import express from "express";
+import type { Application } from "express";
+import { connectDB } from "./config/database";
+import { env } from "./config/environment";
+import bookRouter from "./routes/book.routes";
 
-const app: Application = express();
-const PORT = process.env.PORT || 3000;
+// ============================================
+// 1. CREAR LA APLICACIÓN EXPRESS
+// ============================================
+export const app: Application = express();
 
-// Middlewares
-app.use(cors());
+// ============================================
+// 2. MIDDLEWARES
+// ============================================
+// Middleware para parsear JSON en las peticiones
+// Sin esto, req.body estaría undefined
 app.use(express.json());
 
-// Rutas básicas
-app.get('/', (_req: Request, res: Response) => {
-  res.json({ message: '🚀 API funcionando correctamente' });
-});
+// ============================================
+// 3. RUTAS
+// ============================================
+// Todas las rutas de libros empiezan con /books
+// Ejemplo: GET /books, POST /books, etc.
+app.use("/books", bookRouter);
 
-app.get('/health', (_req: Request, res: Response) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
-});
+// ============================================
+// 4. FUNCIÓN PARA ARRANCAR EL SERVIDOR HTTP
+// ============================================
+const startHttpApi = (): void => {
+  app.listen(env.PORT, () => {
+    console.log(`✅ Servidor corriendo en http://localhost:${env.PORT}`);
+    console.log(`📚 Rutas disponibles: http://localhost:${env.PORT}/books`);
+  });
+};
 
-// Iniciar servidor
-const startServer = async () => {
+// ============================================
+// 5. FUNCIÓN PRINCIPAL DE LA APLICACIÓN
+// ============================================
+const executeApp = async (): Promise<void> => {
   try {
+    console.log("🚀 Iniciando aplicación...");
+
+    // Paso 1: Conectar a la base de datos
     await connectDB();
-    app.listen(PORT, () => {
-      console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-    });
+
+    // Paso 2: Arrancar el servidor HTTP
+    startHttpApi();
   } catch (error) {
-    console.error('❌ Error iniciando servidor:', error);
-    process.exit(1);
+    console.error("❌ Error al iniciar la aplicación:", error);
+    process.exit(1); // Detener la aplicación con código de error
   }
 };
 
-startServer();
+// ============================================
+// 6. EJECUTAR LA APLICACIÓN
+// ============================================
+// Solo ejecutar si este archivo se ejecuta directamente (no en tests)
+if (require.main === module) {
+  executeApp();
+}
