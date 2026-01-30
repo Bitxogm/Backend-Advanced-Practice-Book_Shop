@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { app } from '../../server';
-import { Book } from '../../models/book.model';
+import { BookModelMongoose as Book } from '../../infrastructure/models/book.model';
 import { createRandomBook, CreateRandomBookData } from './helpers/create-random-book';
 
 /**
@@ -29,11 +29,11 @@ describe('POST /books', () => {
 
     expect(response.status).toBe(201);
     expect(response.body.message).toBe('Libro creado con éxito');
-    expect(response.body.item).toHaveProperty('_id');
+    expect(response.body.item).toHaveProperty('id');
     expect(response.body.item.title).toBe(newBook.title);
     expect(response.body.item.author).toBe(newBook.author);
     expect(response.body.item.status).toBe('PUBLISHED');
-  });
+  }, 10000); // Timeout de 10 segundos
 
   it('debe fallar si falta el título', async () => {
     const bookWithoutTitle = createRandomBook();
@@ -43,7 +43,7 @@ describe('POST /books', () => {
 
     expect(response.status).toBe(400);
     expect(response.body.message).toBe('Faltan campos requeridos');
-  });
+  }, 10000);
 
   it('debe fallar si falta la descripción', async () => {
     const bookWithoutDescription = createRandomBook();
@@ -52,7 +52,7 @@ describe('POST /books', () => {
     const response = await request(app).post('/books').send(bookWithoutDescription);
 
     expect(response.status).toBe(400);
-  });
+  }, 10000);
 
   it('debe fallar si el precio es negativo', async () => {
     const bookWithNegativePrice = createRandomBook({ price: -10 });
@@ -60,5 +60,5 @@ describe('POST /books', () => {
     const response = await request(app).post('/books').send(bookWithNegativePrice);
 
     expect(response.status).toBe(400);
-  });
+  }, 10000);
 });

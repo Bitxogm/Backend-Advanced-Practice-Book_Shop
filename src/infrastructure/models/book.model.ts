@@ -91,4 +91,4 @@ const bookSchema = new Schema<IBook>(
 // 3. EXPORTAR EL MODELO
 // ============================================
 // Esto crea el modelo "Book" que usaremos en toda la app
-export const Book = mongoose.model<IBook>('Book', bookSchema);
+export const BookModelMongoose = mongoose.model<IBook>('Book', bookSchema);
