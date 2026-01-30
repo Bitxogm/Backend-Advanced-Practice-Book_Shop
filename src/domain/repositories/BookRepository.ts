@@ -17,9 +17,12 @@ export interface IBookRepository {
     ownerId?: string;
   }): Promise<Book>;
   // Aquí irán otros métodos como:
+  getAll(): Promise<Book[]>;
   // findById(id: string): Promise<Book | null>;
-  // update(book: Book): Promise<Book>;
-  // delete(id: string): Promise<void>;
+  update(book: Book): Promise<Book | null>;
+  delete(id: string): Promise<Book | null>;
+
+  findById(id: string): Promise<Book | null>;
 }
 
 export default IBookRepository;

@@ -29,6 +29,7 @@ export const HTTP_STATUS = {
  * Los usamos para responder cuando algo sale mal
  */
 export const ERROR_MESSAGES = {
+  NO_BOOKS_FOUND: 'No se encontraron libros',
   BOOK_NOT_FOUND: 'Libro no encontrado',
   BOOK_NOT_AVAILABLE: 'Libro no disponible',
   INVALID_REQUEST: 'Datos de la petición inválidos',
