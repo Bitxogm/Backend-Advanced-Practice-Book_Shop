@@ -29,14 +29,14 @@ export const HTTP_STATUS = {
  * Los usamos para responder cuando algo sale mal
  */
 export const ERROR_MESSAGES = {
-  BOOK_NOT_FOUND: "Libro no encontrado",
-  BOOK_NOT_AVAILABLE: "Libro no disponible",
-  INVALID_REQUEST: "Datos de la petición inválidos",
-  REQUIRED_FIELDS: "Faltan campos requeridos",
-  DATABASE_ERROR: "Error en la base de datos",
-  SERVER_ERROR: "Error interno del servidor",
-  CANNOT_BUY_OWN_BOOK: "No puedes comprar tu propio libro",
-  BOOK_ALREADY_SOLD: "El libro ya está vendido",
+  BOOK_NOT_FOUND: 'Libro no encontrado',
+  BOOK_NOT_AVAILABLE: 'Libro no disponible',
+  INVALID_REQUEST: 'Datos de la petición inválidos',
+  REQUIRED_FIELDS: 'Faltan campos requeridos',
+  DATABASE_ERROR: 'Error en la base de datos',
+  SERVER_ERROR: 'Error interno del servidor',
+  CANNOT_BUY_OWN_BOOK: 'No puedes comprar tu propio libro',
+  BOOK_ALREADY_SOLD: 'El libro ya está vendido',
 } as const;
 
 /**
@@ -44,8 +44,8 @@ export const ERROR_MESSAGES = {
  * Los usamos para responder cuando todo sale bien
  */
 export const SUCCESS_MESSAGES = {
-  BOOK_CREATED: "Libro creado con éxito",
-  BOOK_UPDATED: "Libro actualizado con éxito",
-  BOOK_DELETED: "Libro eliminado con éxito",
-  BOOK_PURCHASED: "Libro comprado con éxito",
+  BOOK_CREATED: 'Libro creado con éxito',
+  BOOK_UPDATED: 'Libro actualizado con éxito',
+  BOOK_DELETED: 'Libro eliminado con éxito',
+  BOOK_PURCHASED: 'Libro comprado con éxito',
 } as const;

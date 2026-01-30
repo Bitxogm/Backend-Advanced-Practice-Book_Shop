@@ -9,14 +9,10 @@
  * - DELETE = Eliminar datos
  */
 
-import express from "express";
-import type { Request, Response } from "express";
-import {
-  ERROR_MESSAGES,
-  HTTP_STATUS,
-  SUCCESS_MESSAGES,
-} from "../config/constants";
-import { Book } from "../models/book.model";
+import express from 'express';
+import type { Request, Response } from 'express';
+import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '../config/constants';
+import { Book } from '../models/book.model';
 
 // ============================================
 // TIPOS PARA LAS PETICIONES
@@ -47,10 +43,10 @@ const bookRouter: express.Router = express.Router();
 // GET /books - Listar todos los libros publicados
 // ============================================
 // Ruta pública que devuelve todos los libros disponibles
-bookRouter.get("/", async (req: Request, res: Response): Promise<void> => {
+bookRouter.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
     // Busca solo libros con status PUBLISHED, ordenados del más nuevo al más viejo
-    const books = await Book.find({ status: "PUBLISHED" }).sort({
+    const books = await Book.find({ status: 'PUBLISHED' }).sort({
       createdAt: -1,
     });
 
@@ -69,16 +65,14 @@ bookRouter.get("/", async (req: Request, res: Response): Promise<void> => {
 // GET /books/:bookId - Obtener un libro específico
 // ============================================
 bookRouter.get(
-  "/:bookId",
+  '/:bookId',
   async (req: Request<{ bookId: string }>, res: Response): Promise<void> => {
     try {
       const { bookId } = req.params;
 
       // Validar que el ID tenga formato MongoDB (24 caracteres hexadecimales)
       if (!bookId.match(/^[0-9a-fA-F]{24}$/)) {
-        res
-          .status(HTTP_STATUS.NOT_FOUND)
-          .json({ message: ERROR_MESSAGES.BOOK_NOT_FOUND });
+        res.status(HTTP_STATUS.NOT_FOUND).json({ message: ERROR_MESSAGES.BOOK_NOT_FOUND });
         return;
       }
 
@@ -86,17 +80,13 @@ bookRouter.get(
 
       // Si no existe el libro
       if (!book) {
-        res
-          .status(HTTP_STATUS.NOT_FOUND)
-          .json({ message: ERROR_MESSAGES.BOOK_NOT_FOUND });
+        res.status(HTTP_STATUS.NOT_FOUND).json({ message: ERROR_MESSAGES.BOOK_NOT_FOUND });
         return;
       }
 
       // Solo mostrar si está publicado (no mostrar libros vendidos)
-      if (book.status !== "PUBLISHED") {
-        res
-          .status(HTTP_STATUS.NOT_FOUND)
-          .json({ message: ERROR_MESSAGES.BOOK_NOT_AVAILABLE });
+      if (book.status !== 'PUBLISHED') {
+        res.status(HTTP_STATUS.NOT_FOUND).json({ message: ERROR_MESSAGES.BOOK_NOT_AVAILABLE });
         return;
       }
 
@@ -105,70 +95,59 @@ bookRouter.get(
         items: [book],
       });
     } catch (error) {
-      res
-        .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-        .json({ message: ERROR_MESSAGES.SERVER_ERROR });
+      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
-  },
+  }
 );
 
 // ============================================
 // POST /books - Crear un nuevo libro
 // ============================================
 // TODO: Cuando implementes autenticación, el ownerId vendrá del token JWT
-bookRouter.post(
-  "/",
-  async (req: Request<CreateBookBody>, res: Response): Promise<void> => {
-    try {
-      const { title, description, price, author, ownerId } = req.body;
+bookRouter.post('/', async (req: Request<CreateBookBody>, res: Response): Promise<void> => {
+  try {
+    const { title, description, price, author, ownerId } = req.body;
 
-      // Validar que vengan todos los campos obligatorios
-      if (!title || !description || price === undefined || !author) {
-        res
-          .status(HTTP_STATUS.BAD_REQUEST)
-          .json({ message: ERROR_MESSAGES.REQUIRED_FIELDS });
-        return;
-      }
-
-      // Crear el nuevo libro
-      const newBook = new Book({
-        title,
-        description,
-        price,
-        author,
-        ownerId: ownerId || "000000000000000000000000", // ID temporal hasta tener auth
-        status: "PUBLISHED",
-      });
-
-      // Guardarlo en la base de datos
-      const savedBook = await newBook.save();
-
-      // Responder con el libro creado
-      res.status(HTTP_STATUS.CREATED).json({
-        message: SUCCESS_MESSAGES.BOOK_CREATED,
-        item: savedBook,
-      });
-    } catch (error: unknown) {
-      // Verificar si es un error de tipo Error
-      const errorMessage =
-        error instanceof Error ? error.message : ERROR_MESSAGES.DATABASE_ERROR;
-      res.status(HTTP_STATUS.BAD_REQUEST).json({
-        message: errorMessage,
-      });
+    // Validar que vengan todos los campos obligatorios
+    if (!title || !description || price === undefined || !author) {
+      res.status(HTTP_STATUS.BAD_REQUEST).json({ message: ERROR_MESSAGES.REQUIRED_FIELDS });
+      return;
     }
-  },
-);
+
+    // Crear el nuevo libro
+    const newBook = new Book({
+      title,
+      description,
+      price,
+      author,
+      ownerId: ownerId || '000000000000000000000000', // ID temporal hasta tener auth
+      status: 'PUBLISHED',
+    });
+
+    // Guardarlo en la base de datos
+    const savedBook = await newBook.save();
+
+    // Responder con el libro creado
+    res.status(HTTP_STATUS.CREATED).json({
+      message: SUCCESS_MESSAGES.BOOK_CREATED,
+      item: savedBook,
+    });
+  } catch (error: unknown) {
+    // Verificar si es un error de tipo Error
+    const errorMessage = error instanceof Error ? error.message : ERROR_MESSAGES.DATABASE_ERROR;
+    res.status(HTTP_STATUS.BAD_REQUEST).json({
+      message: errorMessage,
+    });
+  }
+});
 
 // ============================================
 // PATCH /books/:bookId - Actualizar un libro
 // ============================================
 // Solo permite actualizar: título, descripción, precio y autor
 bookRouter.patch(
-  "/:bookId",
-  async (
-    req: Request<{ bookId: string }, UpdateBookBody>,
-    res: Response,
-  ): Promise<void> => {
+  '/:bookId',
+  async (req: Request<{ bookId: string }, UpdateBookBody>, res: Response): Promise<void> => {
     try {
       const { bookId } = req.params;
       const { title, description, price, author } = req.body;
@@ -187,9 +166,7 @@ bookRouter.patch(
       });
 
       if (!updatedBook) {
-        res
-          .status(HTTP_STATUS.NOT_FOUND)
-          .json({ message: ERROR_MESSAGES.BOOK_NOT_FOUND });
+        res.status(HTTP_STATUS.NOT_FOUND).json({ message: ERROR_MESSAGES.BOOK_NOT_FOUND });
         return;
       }
 
@@ -198,18 +175,16 @@ bookRouter.patch(
         item: updatedBook,
       });
     } catch (error) {
-      res
-        .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-        .json({ message: ERROR_MESSAGES.SERVER_ERROR });
+      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
-  },
+  }
 );
 
 // ============================================
 // DELETE /books/:bookId - Eliminar un libro
 // ============================================
 bookRouter.delete(
-  "/:bookId",
+  '/:bookId',
   async (req: Request<{ bookId: string }>, res: Response): Promise<void> => {
     try {
       const { bookId } = req.params;
@@ -218,19 +193,15 @@ bookRouter.delete(
       const deletedBook = await Book.findByIdAndDelete(bookId);
 
       if (!deletedBook) {
-        res
-          .status(HTTP_STATUS.NOT_FOUND)
-          .json({ message: ERROR_MESSAGES.BOOK_NOT_FOUND });
+        res.status(HTTP_STATUS.NOT_FOUND).json({ message: ERROR_MESSAGES.BOOK_NOT_FOUND });
         return;
       }
 
       res.json({ message: SUCCESS_MESSAGES.BOOK_DELETED });
     } catch (error) {
-      res
-        .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-        .json({ message: ERROR_MESSAGES.SERVER_ERROR });
+      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
-  },
+  }
 );
 
 // ============================================

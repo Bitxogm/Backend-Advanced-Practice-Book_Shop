@@ -5,8 +5,8 @@
  * MongoDB es nuestra base de datos donde guardamos todos los libros.
  */
 
-import mongoose from "mongoose";
-import { env } from "./environment";
+import mongoose from 'mongoose';
+import { env } from './environment';
 
 /**
  * Función que conecta a la base de datos MongoDB
@@ -15,12 +15,12 @@ import { env } from "./environment";
 export const connectDB = async (): Promise<void> => {
   try {
     // Intentamos conectarnos usando la URI del archivo environment
-    console.log("🔍 Conectando a MongoDB...");
+    console.log('🔍 Conectando a MongoDB...');
     await mongoose.connect(env.MONGODB_URI);
-    console.log("✅ MongoDB conectado correctamente");
+    console.log('✅ MongoDB conectado correctamente');
   } catch (error) {
     // Si hay un error, lo mostramos y detenemos la aplicación
-    console.error("❌ Error al conectar a MongoDB:", error);
+    console.error('❌ Error al conectar a MongoDB:', error);
     process.exit(1); // Detiene la aplicación con código de error
   }
 };
