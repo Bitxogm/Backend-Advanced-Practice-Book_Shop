@@ -16,7 +16,7 @@ import express from 'express';
 import type { Application } from 'express';
 import { connectDB } from './config/database';
 import { env } from './config/environment';
-import bookRouter from './routes/book.routes';
+import bookRouter from './ui/routes/book.routes';
 
 // ============================================
 // 1. CREAR LA APLICACIÓN EXPRESS
