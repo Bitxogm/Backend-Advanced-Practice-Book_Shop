@@ -12,11 +12,11 @@
  * 5. Arrancar el servidor en el puerto especificado
  */
 
-import express from "express";
-import type { Application } from "express";
-import { connectDB } from "./config/database";
-import { env } from "./config/environment";
-import bookRouter from "./routes/book.routes";
+import express from 'express';
+import type { Application } from 'express';
+import { connectDB } from './config/database';
+import { env } from './config/environment';
+import bookRouter from './routes/book.routes';
 
 // ============================================
 // 1. CREAR LA APLICACIÓN EXPRESS
@@ -35,7 +35,7 @@ app.use(express.json());
 // ============================================
 // Todas las rutas de libros empiezan con /books
 // Ejemplo: GET /books, POST /books, etc.
-app.use("/books", bookRouter);
+app.use('/books', bookRouter);
 
 // ============================================
 // 4. FUNCIÓN PARA ARRANCAR EL SERVIDOR HTTP
@@ -52,7 +52,7 @@ const startHttpApi = (): void => {
 // ============================================
 const executeApp = async (): Promise<void> => {
   try {
-    console.log("🚀 Iniciando aplicación...");
+    console.log('🚀 Iniciando aplicación...');
 
     // Paso 1: Conectar a la base de datos
     await connectDB();
@@ -60,7 +60,7 @@ const executeApp = async (): Promise<void> => {
     // Paso 2: Arrancar el servidor HTTP
     startHttpApi();
   } catch (error) {
-    console.error("❌ Error al iniciar la aplicación:", error);
+    console.error('❌ Error al iniciar la aplicación:', error);
     process.exit(1); // Detener la aplicación con código de error
   }
 };

@@ -13,9 +13,8 @@ export const env = {
 
   // La URL para conectarse a MongoDB
   MONGODB_URI:
-    process.env.MONGO_URI ||
-    "mongodb://admin:admin123@localhost:27019/mydb?authSource=admin",
+    process.env.MONGO_URI || 'mongodb://admin:admin123@localhost:27019/mydb?authSource=admin',
 
   // El entorno en el que estamos (desarrollo, producción, test)
-  NODE_ENV: process.env.NODE_ENV || "development",
+  NODE_ENV: process.env.NODE_ENV || 'development',
 };
