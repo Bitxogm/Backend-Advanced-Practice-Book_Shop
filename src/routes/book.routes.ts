@@ -12,20 +12,13 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '../config/constants';
-import { Book } from '../models/book.model';
+import { BookModelMongoose as Book } from '../infrastructure/models/book.model';
+import { createBookController } from '../ui/controllers/create-book-controllers';
 
 // ============================================
 // TIPOS PARA LAS PETICIONES
 // ============================================
 // Define qué datos esperamos recibir en cada petición
-
-interface CreateBookBody {
-  title: string;
-  description: string;
-  price: number;
-  author: string;
-  ownerId: string;
-}
 
 interface UpdateBookBody {
   title?: string; // El ? significa opcional
@@ -104,42 +97,7 @@ bookRouter.get(
 // POST /books - Crear un nuevo libro
 // ============================================
 // TODO: Cuando implementes autenticación, el ownerId vendrá del token JWT
-bookRouter.post('/', async (req: Request<CreateBookBody>, res: Response): Promise<void> => {
-  try {
-    const { title, description, price, author, ownerId } = req.body;
-
-    // Validar que vengan todos los campos obligatorios
-    if (!title || !description || price === undefined || !author) {
-      res.status(HTTP_STATUS.BAD_REQUEST).json({ message: ERROR_MESSAGES.REQUIRED_FIELDS });
-      return;
-    }
-
-    // Crear el nuevo libro
-    const newBook = new Book({
-      title,
-      description,
-      price,
-      author,
-      ownerId: ownerId || '000000000000000000000000', // ID temporal hasta tener auth
-      status: 'PUBLISHED',
-    });
-
-    // Guardarlo en la base de datos
-    const savedBook = await newBook.save();
-
-    // Responder con el libro creado
-    res.status(HTTP_STATUS.CREATED).json({
-      message: SUCCESS_MESSAGES.BOOK_CREATED,
-      item: savedBook,
-    });
-  } catch (error: unknown) {
-    // Verificar si es un error de tipo Error
-    const errorMessage = error instanceof Error ? error.message : ERROR_MESSAGES.DATABASE_ERROR;
-    res.status(HTTP_STATUS.BAD_REQUEST).json({
-      message: errorMessage,
-    });
-  }
-});
+bookRouter.post('/', createBookController);
 
 // ============================================
 // PATCH /books/:bookId - Actualizar un libro
