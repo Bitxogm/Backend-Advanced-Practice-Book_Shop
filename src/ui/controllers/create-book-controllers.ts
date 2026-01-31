@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
 
-import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '../../config/constants';
-import { CreateBookUseCase } from '../../domain/use-cases/create-book-usecase';
-import { BookMongodbRepository } from '../../infrastructure/repositories/book-repository';
+import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '@config/constants';
+import { CreateBookUseCase } from '@domain/use-cases/create-book-usecase';
+import { BookMongodbRepository } from '@infrastructure/repositories/book-repository';
 
 // ============================================
 // TIPOS PARA LAS PETICIONES

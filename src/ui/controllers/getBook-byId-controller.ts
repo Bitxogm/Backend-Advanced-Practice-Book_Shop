@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
-import { ERROR_MESSAGES, HTTP_STATUS } from '../../config/constants';
+import { ERROR_MESSAGES, HTTP_STATUS } from '@config/constants';
 
-import { BookMongodbRepository } from '../../infrastructure/repositories/book-repository';
-import { GetBookByIdUseCase } from '../../domain/use-cases/getBook-byId-usecase';
+import { BookMongodbRepository } from '@infrastructure/repositories/book-repository';
+import { GetBookByIdUseCase } from '@domain/use-cases/getBook-byId-usecase';
 
 export const getBookByIdController = async (request: Request, response: Response) => {
   try {

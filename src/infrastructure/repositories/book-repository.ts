@@ -1,6 +1,6 @@
-import { BookModelMongoose as BookModel } from '../models/book.model';
-import { IBookRepository } from '../../domain/repositories/BookRepository';
-import { Book } from '../../domain/entities/Book';
+import { BookModelMongoose as BookModel } from '@infrastructure/models/book.model';
+import { IBookRepository } from '@domain/repositories/BookRepository';
+import { Book } from '@domain/entities/Book';
 
 export class BookMongodbRepository implements IBookRepository {
   async update(book: Book): Promise<Book | null> {

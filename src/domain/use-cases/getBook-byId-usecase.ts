@@ -1,5 +1,5 @@
-import { IBookRepository } from '../repositories/BookRepository';
-import Book from '../entities/Book';
+import { IBookRepository } from '@domain/repositories/BookRepository';
+import Book from '@domain/entities/Book';
 
 export class GetBookByIdUseCase {
   private readonly bookRepository: IBookRepository;

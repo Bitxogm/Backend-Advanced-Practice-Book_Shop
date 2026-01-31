@@ -1,7 +1,7 @@
 import { type Request, type Response } from 'express';
-import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '../../config/constants';
-import { DeleteBookUseCase } from '../../domain/use-cases/delete-book-usecase';
-import { BookMongodbRepository } from '../../infrastructure/repositories/book-repository';
+import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '@config/constants';
+import { DeleteBookUseCase } from '@domain/use-cases/delete-book-usecase';
+import { BookMongodbRepository } from '@infrastructure/repositories/book-repository';
 
 export const deleteBookController = async (request: Request, response: Response) => {
   try {

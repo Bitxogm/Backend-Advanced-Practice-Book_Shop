@@ -1,5 +1,5 @@
-import { BookMongodbRepository } from '../../infrastructure/repositories/book-repository';
-import Book from '../entities/Book';
+import { BookMongodbRepository } from '@infrastructure/repositories/book-repository';
+import Book from '@domain/entities/Book';
 
 export class UpdateBookUseCase {
   readonly bookRepository: BookMongodbRepository;
