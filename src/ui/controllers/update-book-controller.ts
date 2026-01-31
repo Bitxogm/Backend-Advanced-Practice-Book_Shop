@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '../../config/constants';
-import { BookModelMongoose as Book } from '../../infrastructure/models/book.model';
+import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '@config/constants';
+import { BookModelMongoose as Book } from '@infrastructure/models/book.model';
 
 interface UpdateBookBody {
   title?: string; // El ? significa opcional

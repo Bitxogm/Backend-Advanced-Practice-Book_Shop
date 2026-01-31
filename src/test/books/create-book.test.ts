@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { app } from '../../server';
-import { BookModelMongoose as Book } from '../../infrastructure/models/book.model';
+import { app } from '@/server';
+import { BookModelMongoose as Book } from '@infrastructure/models/book.model';
 import { createRandomBook, CreateRandomBookData } from './helpers/create-random-book';
 
 /**
