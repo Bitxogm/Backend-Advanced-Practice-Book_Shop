@@ -3,6 +3,7 @@ import { ERROR_MESSAGES, HTTP_STATUS } from '@config/constants';
 
 import { BookMongodbRepository } from '@infrastructure/repositories/book-repository';
 import { GetBookByIdUseCase } from '@domain/use-cases/getBook-byId-usecase';
+import type { BookResponseDTO } from '../dto/book.dto';
 
 export const getBookByIdController = async (request: Request, response: Response) => {
   try {
@@ -25,9 +26,19 @@ export const getBookByIdController = async (request: Request, response: Response
       });
     }
 
+    const responseDTO: BookResponseDTO = {
+      id: book.id,
+      title: book.title,
+      description: book.description,
+      price: book.price,
+      author: book.author,
+      status: book.status,
+      ownerId: book.ownerId,
+      soldAt: book.soldAt,
+    };
     return response.status(HTTP_STATUS.OK).json({
       count: 1,
-      items: [book],
+      items: [responseDTO],
     });
   } catch (error) {
     return response.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({

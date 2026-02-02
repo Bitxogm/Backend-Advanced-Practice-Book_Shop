@@ -1,40 +1,56 @@
 import { Request, Response } from 'express';
 import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '@config/constants';
-import { BookModelMongoose as Book } from '@infrastructure/models/book.model';
 
-interface UpdateBookBody {
-  title?: string; // El ? significa opcional
-  description?: string;
-  price?: number;
-  author?: string;
-}
+import { UpdateBookUseCase } from '@domain/use-cases/update-book-usecase';
+import { BookMongodbRepository } from '@infrastructure/repositories/book-repository';
+import type { UpdateBookDTO, BookResponseDTO } from '../dto/book.dto';
 
-export const updateBookController = async (request: Request, response: Response) => {
+export const updateBookController = async (
+  request: Request<{ bookId: string }, UpdateBookDTO>,
+  response: Response
+) => {
   try {
     const { bookId } = request.params;
-    const { title, description, price, author } = request.body;
+    const updateData: UpdateBookDTO = request.body;
 
-    // Construir un objeto solo con los campos que vienen en la petición
-    // Partial<UpdateBookBody> significa que puede tener algunos o ninguno de los campos
-    const updateData: Partial<UpdateBookBody> = {};
-    if (title) updateData.title = title;
-    if (description) updateData.description = description;
-    if (price !== undefined) updateData.price = price;
-    if (author) updateData.author = author;
+    // Validar que haya al menos un campo para actualizar y que el body sea un objeto válido
+    if (
+      !updateData ||
+      typeof updateData !== 'object' ||
+      Array.isArray(updateData) ||
+      Object.keys(updateData).length === 0
+    ) {
+      response.status(HTTP_STATUS.BAD_REQUEST).json({ message: ERROR_MESSAGES.REQUIRED_FIELDS });
+      return;
+    }
 
-    // Actualizar el libro en la BD y devolver el libro actualizado (new: true)
-    const updatedBook = await Book.findByIdAndUpdate(bookId, updateData, {
-      new: true,
-    });
+    // Crear dependencias
+    const bookMongodbRepository = new BookMongodbRepository();
+    const updateBookUseCase = new UpdateBookUseCase(bookMongodbRepository);
+
+    // Ejecutar caso de uso
+    const updatedBook = await updateBookUseCase.execute(bookId, updateData);
 
     if (!updatedBook) {
       response.status(HTTP_STATUS.NOT_FOUND).json({ message: ERROR_MESSAGES.BOOK_NOT_FOUND });
       return;
     }
 
+    // Mapear Book a BookResponseDTO
+    const responseDTO: BookResponseDTO = {
+      id: updatedBook.id,
+      title: updatedBook.title,
+      description: updatedBook.description,
+      price: updatedBook.price,
+      author: updatedBook.author,
+      status: updatedBook.status,
+      ownerId: updatedBook.ownerId,
+      soldAt: updatedBook.soldAt,
+    };
+
     response.status(HTTP_STATUS.OK).json({
       message: SUCCESS_MESSAGES.BOOK_UPDATED,
-      item: updatedBook,
+      item: responseDTO,
     });
   } catch (error) {
     response

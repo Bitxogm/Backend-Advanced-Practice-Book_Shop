@@ -7,24 +7,17 @@ import { BookMongodbRepository } from '@infrastructure/repositories/book-reposit
 // ============================================
 // TIPOS PARA LAS PETICIONES
 // ============================================
-// Define qué datos esperamos recibir en cada petición
-interface CreateBookBody {
-  title: string;
-  description: string;
-  price: number;
-  author: string;
-  ownerId: string;
-}
+import type { BookRequestDTO, BookResponseDTO } from '../dto/book.dto';
 
 export const createBookController = async (
-  req: Request<CreateBookBody>,
+  req: Request<object, object, BookRequestDTO>,
   res: Response
 ): Promise<void> => {
   try {
-    const { title, description, price, author } = req.body;
+    const { title, description, price, author, ownerId } = req.body;
 
     // Validar que vengan todos los campos obligatorios
-    if (!title || !description || price === undefined || !author) {
+    if (!title || !description || price === undefined || !author || !ownerId) {
       res.status(HTTP_STATUS.BAD_REQUEST).json({ message: ERROR_MESSAGES.REQUIRED_FIELDS });
       return;
     }
@@ -40,18 +33,30 @@ export const createBookController = async (
     const createBookUseCase = new CreateBookUseCase(bookMongodbRepository);
 
     // Llamar al caso de uso para crear el libro
+
     const newBook = await createBookUseCase.execute({
       title,
       description,
       price,
       author,
-      ownerId: '000000000000000000000000', // ID temporal hasta tener auth
+      ownerId,
     });
 
     // Responder con el libro creado
+    // Mapear Book (entidad de dominio) a BookResponseDTO
+    const response: BookResponseDTO = {
+      id: newBook.id,
+      title: newBook.title,
+      description: newBook.description,
+      price: newBook.price,
+      author: newBook.author,
+      status: newBook.status,
+      ownerId: newBook.ownerId,
+      soldAt: newBook.soldAt,
+    };
     res.status(HTTP_STATUS.CREATED).json({
       message: SUCCESS_MESSAGES.BOOK_CREATED,
-      item: newBook,
+      item: response,
     });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : ERROR_MESSAGES.DATABASE_ERROR;

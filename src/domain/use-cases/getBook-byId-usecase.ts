@@ -2,11 +2,7 @@ import { IBookRepository } from '@domain/repositories/BookRepository';
 import Book from '@domain/entities/Book';
 
 export class GetBookByIdUseCase {
-  private readonly bookRepository: IBookRepository;
-
-  constructor(bookRepository: IBookRepository) {
-    this.bookRepository = bookRepository;
-  }
+  constructor(private readonly bookRepository: IBookRepository) {}
 
   public async execute(bookId: string): Promise<Book | null> {
     const book = await this.bookRepository.findById(bookId);
