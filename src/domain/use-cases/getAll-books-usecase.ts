@@ -2,11 +2,7 @@ import { IBookRepository } from '@domain/repositories/BookRepository';
 import Book from '@domain/entities/Book';
 
 export class GetAllbooksUseCase {
-  private readonly bookRepository: IBookRepository;
-
-  constructor(bookRepository: IBookRepository) {
-    this.bookRepository = bookRepository;
-  }
+  constructor(private readonly bookRepository: IBookRepository) {}
 
   public async execute(): Promise<Book[]> {
     const books = await this.bookRepository.getAll();

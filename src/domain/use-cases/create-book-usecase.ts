@@ -1,41 +1,19 @@
 import { BookMongodbRepository } from '@infrastructure/repositories/book-repository';
 import Book from '@domain/entities/Book';
+import { BookCreatePayload } from '@domain/types/BookCreatePayload';
 
 // Aqui vivira la logica de negocio para crear un libro
 
 export class CreateBookUseCase {
-  readonly BookRepository: BookMongodbRepository;
-
-  constructor(bookRepository: BookMongodbRepository) {
-    this.BookRepository = bookRepository;
-  }
-  public async execute({
-    title,
-    description,
-    price,
-    author,
-    ownerId,
-  }: {
-    title: string;
-    description: string;
-    price: number;
-    author: string;
-    ownerId: string;
-  }): Promise<Book> {
+  constructor(private readonly bookRepository: BookMongodbRepository) {}
+  public async execute(payload: BookCreatePayload): Promise<Book> {
     // Validación de negocio: precio no puede ser negativo
-    if (price < 0) {
+    if (payload.price < 0) {
       throw new Error('El precio no puede ser negativo');
     }
 
     // Guardar en la base de datos a través del repositorio
-    const savedBook = await this.BookRepository.createOneBook({
-      title,
-      description,
-      price,
-      author,
-      ownerId,
-    });
-
+    const savedBook = await this.bookRepository.createOneBook(payload);
     return savedBook;
   }
 }

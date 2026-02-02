@@ -33,6 +33,10 @@ app.use(express.json());
 // ============================================
 // 3. RUTAS
 // ============================================
+// Ruta raíz informativa
+app.get('/', (req, res) => {
+  res.send('API de libros. Visita /books para ver los endpoints.');
+});
 // Todas las rutas de libros empiezan con /books
 // Ejemplo: GET /books, POST /books, etc.
 app.use('/books', bookRouter);
