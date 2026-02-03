@@ -11,11 +11,11 @@
 
 import express from 'express';
 
-import { createBookController } from '@ui/controllers/create-book-controllers';
-import { getAllBooksController } from '@ui/controllers/getAll-books-controller';
-import { getBookByIdController } from '@ui/controllers/getBook-byId-controller';
-import { deleteBookController } from '@ui/controllers/delete-book-controller';
-import { updateBookController } from '@ui/controllers/update-book-controller';
+import { createBookController } from '@ui/controllers/book/create-book-controllers';
+import { getAllBooksController } from '@ui/controllers/book/getAll-books-controller';
+import { getBookByIdController } from '@ui/controllers/book/getBook-byId-controller';
+import { deleteBookController } from '@ui/controllers/book/delete-book-controller';
+import { updateBookController } from '@ui/controllers/book/update-book-controller';
 
 // ============================================
 // TIPOS PARA LAS PETICIONES

@@ -17,6 +17,7 @@ import type { Application } from 'express';
 import { connectDB } from '@config/database';
 import { env } from '@config/environment';
 import bookRouter from '@ui/routes/book.routes';
+import authenticationRouter from './ui/routes/authentication.routes';
 
 // ============================================
 // 1. CREAR LA APLICACIÓN EXPRESS
@@ -29,7 +30,7 @@ export const app: Application = express();
 // Middleware para parsear JSON en las peticiones
 // Sin esto, req.body estaría undefined
 app.use(express.json());
-
+app.use('/auth', authenticationRouter);
 // ============================================
 // 3. RUTAS
 // ============================================

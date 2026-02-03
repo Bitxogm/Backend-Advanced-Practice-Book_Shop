@@ -1,13 +1,13 @@
 import type { Request, Response } from 'express';
 
 import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '@config/constants';
-import { CreateBookUseCase } from '@domain/use-cases/create-book-usecase';
-import { BookMongodbRepository } from '@infrastructure/repositories/book-repository';
+import { CreateBookUseCase } from '@domain/use-cases/book/create-book-usecase';
+import { BookMongodbRepository } from '@/infrastructure/repositories/book/book-mongodb-repository';
 
 // ============================================
 // TIPOS PARA LAS PETICIONES
 // ============================================
-import type { BookRequestDTO, BookResponseDTO } from '../dto/book.dto';
+import type { BookRequestDTO, BookResponseDTO } from '../../dto/book.dto';
 
 export const createBookController = async (
   req: Request<object, object, BookRequestDTO>,

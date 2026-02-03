@@ -1,4 +1,4 @@
-import { BookMongodbRepository } from '@infrastructure/repositories/book-repository';
+import { BookMongodbRepository } from '@/infrastructure/repositories/book/book-mongodb-repository';
 import Book from '@domain/entities/Book';
 import { BookUpdateQuery } from '@domain/types/BookUpdateQuery';
 
