@@ -38,6 +38,8 @@ export const ERROR_MESSAGES = {
   SERVER_ERROR: 'Error interno del servidor',
   CANNOT_BUY_OWN_BOOK: 'No puedes comprar tu propio libro',
   BOOK_ALREADY_SOLD: 'El libro ya está vendido',
+  EMAIL_AND_PASSWORD_REQUIRED: 'Email y contraseña son requeridos',
+  USER_ALREADY_EXISTS: 'Ya existe un usuario con este email',
 } as const;
 
 /**
