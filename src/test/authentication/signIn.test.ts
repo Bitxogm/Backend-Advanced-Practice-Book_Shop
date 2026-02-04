@@ -16,8 +16,6 @@ describe('Sign In Authentication Tests', () => {
     const response = await request(app).post('/auth/signin').send(testUser);
     expect(response.status).toBe(200);
     expect(response.body.message).toBe('User signed in successfully.');
-    // Si devuelves el token, puedes comprobarlo aquí
-    // expect(response.body.token).toBeDefined();
   });
 
   test('should fail with wrong password', async () => {
