@@ -49,12 +49,12 @@ bookRouter.post('/', [authenticationMiddleware], createBookController);
 // PATCH /books/:bookId - Actualizar un libro
 // ============================================
 // Solo permite actualizar: título, descripción, precio y autor
-bookRouter.patch('/:bookId', updateBookController);
+bookRouter.patch('/:bookId', [authenticationMiddleware], updateBookController);
 
 // ============================================
 // DELETE /books/:bookId - Eliminar un libro
 // ============================================
-bookRouter.delete('/:bookId', deleteBookController);
+bookRouter.delete('/:bookId', [authenticationMiddleware], deleteBookController);
 
 // ============================================
 // EXPORTAR EL ROUTER
