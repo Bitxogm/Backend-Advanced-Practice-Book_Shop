@@ -30,7 +30,7 @@ describe('DELETE /books/:bookId', () => {
     const response = await request(app).delete(`/books/${book._id}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe('Libro eliminado con éxito');
+    expect(response.body.message).toBe('Book deleted successfully');
 
     // Verificar que realmente se eliminó
     const deletedBook = await Book.findById(book._id);

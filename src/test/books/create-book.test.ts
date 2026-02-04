@@ -28,7 +28,7 @@ describe('POST /books', () => {
     const response = await request(app).post('/books').send(newBook);
 
     expect(response.status).toBe(201);
-    expect(response.body.message).toBe('Libro creado con éxito');
+    expect(response.body.message).toBe('Book created successfully');
     expect(response.body.item).toHaveProperty('id');
     expect(response.body.item.title).toBe(newBook.title);
     expect(response.body.item.author).toBe(newBook.author);
@@ -42,7 +42,7 @@ describe('POST /books', () => {
     const response = await request(app).post('/books').send(bookWithoutTitle);
 
     expect(response.status).toBe(400);
-    expect(response.body.message).toBe('Faltan campos requeridos');
+    expect(response.body.message).toBe('Required fields are missing');
   }, 10000);
 
   it('debe fallar si falta la descripción', async () => {
