@@ -32,7 +32,7 @@ describe('PATCH /books/:bookId', () => {
     const response = await request(app).patch(`/books/${book._id}`).send({ title: newTitle });
 
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe('Libro actualizado con éxito');
+    expect(response.body.message).toBe('Book updated successfully');
     expect(response.body.item.title).toBe(newTitle);
   });
 

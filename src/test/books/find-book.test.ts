@@ -67,7 +67,7 @@ describe('GET /books/:bookId', () => {
     const response = await request(app).get(`/books/${fakeId}`);
 
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe('Libro no encontrado');
+    expect(response.body.message).toBe('Book not found');
   });
 
   it('debe devolver 404 si el ID no es válido', async () => {
