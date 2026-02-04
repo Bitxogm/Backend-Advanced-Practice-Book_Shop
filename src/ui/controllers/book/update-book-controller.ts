@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import type { AuthenticatedRequest } from '../../middlewares/authentication-middleware';
 import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '@config/constants';
 
 import { UpdateBookUseCase } from '@domain/use-cases/book/update-book-usecase';
@@ -28,8 +29,14 @@ export const updateBookController = async (
     const bookMongodbRepository = new BookMongodbRepository();
     const updateBookUseCase = new UpdateBookUseCase(bookMongodbRepository);
 
-    // Ejecutar caso de uso
-    const updatedBook = await updateBookUseCase.execute(bookId, updateData);
+    // Obtener userId autenticado
+    const { user } = request as AuthenticatedRequest;
+    if (!user || !user.id) {
+      response.status(HTTP_STATUS.UNAUTHORIZED).json({ message: 'Unauthorized' });
+      return;
+    }
+    // Ejecutar caso de uso con argumentos en orden correcto
+    const updatedBook = await updateBookUseCase.execute(bookId, user.id, updateData);
 
     if (!updatedBook) {
       response.status(HTTP_STATUS.NOT_FOUND).json({ message: ERROR_MESSAGES.BOOK_NOT_FOUND });
@@ -53,6 +60,16 @@ export const updateBookController = async (
       item: responseDTO,
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'Book not found') {
+        response.status(HTTP_STATUS.NOT_FOUND).json({ message: ERROR_MESSAGES.BOOK_NOT_FOUND });
+        return;
+      }
+      if (error.message === 'You are not authorized to update this book') {
+        response.status(HTTP_STATUS.FORBIDDEN).json({ message: error.message });
+        return;
+      }
+    }
     response
       .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .json({ message: ERROR_MESSAGES.SERVER_ERROR });
