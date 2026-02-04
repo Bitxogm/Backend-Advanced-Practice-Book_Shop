@@ -9,6 +9,7 @@ import request from 'supertest';
 import { app } from '@/server';
 import { BookModelMongoose as Book } from '@infrastructure/models/book.model';
 import { createRandomBook } from './helpers/create-random-book';
+import { createRandomUser } from '../authentication/helpers/create-random-user';
 
 // ============================================
 // ANTES DE TODOS LOS TESTS
@@ -22,6 +23,13 @@ beforeEach(async () => {
 // TESTS PATCH /books/:bookId - Actualizar un libro
 // ============================================
 describe('PATCH /books/:bookId', () => {
+  let token: string;
+  beforeAll(async () => {
+    const user = createRandomUser();
+    const res = await request(app).post('/auth/signup').send(user);
+    token = res.body.token;
+  });
+
   it('debe actualizar el título de un libro', async () => {
     // Crear un libro
     const bookData = createRandomBook();
@@ -29,7 +37,10 @@ describe('PATCH /books/:bookId', () => {
 
     const newTitle = 'Título Actualizado';
 
-    const response = await request(app).patch(`/books/${book._id}`).send({ title: newTitle });
+    const response = await request(app)
+      .patch(`/books/${book._id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ title: newTitle });
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe('Book updated successfully');
@@ -42,7 +53,10 @@ describe('PATCH /books/:bookId', () => {
 
     const newPrice = 29.99;
 
-    const response = await request(app).patch(`/books/${book._id}`).send({ price: newPrice });
+    const response = await request(app)
+      .patch(`/books/${book._id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ price: newPrice });
 
     expect(response.status).toBe(200);
     expect(response.body.item.price).toBe(newPrice);
@@ -51,7 +65,10 @@ describe('PATCH /books/:bookId', () => {
   it('debe devolver 404 si el libro no existe', async () => {
     const fakeId = '507f1f77bcf86cd799439011';
 
-    const response = await request(app).patch(`/books/${fakeId}`).send({ title: 'Nuevo título' });
+    const response = await request(app)
+      .patch(`/books/${fakeId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ title: 'Nuevo título' });
 
     expect(response.status).toBe(404);
   });

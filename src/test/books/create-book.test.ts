@@ -83,4 +83,17 @@ describe('POST /books', () => {
 
     expect(response.status).toBe(400);
   }, 10000);
+
+  it('debe fallar si el token no es válido', async () => {
+    const newBook = createRandomBook();
+    const { ...bookData } = newBook;
+    const invalidToken = 'Bearer invalid.token.value';
+    const response = await request(app)
+      .post('/books')
+      .set('Authorization', invalidToken)
+      .send(bookData);
+
+    expect([401, 403]).toContain(response.status);
+    expect(response.body.message).toMatch(/token|autorizad|inval/i);
+  });
 });

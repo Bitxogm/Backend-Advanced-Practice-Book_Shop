@@ -1,7 +1,7 @@
 /**
  * HELPER PARA CREAR LIBROS FALSOS EN TESTS
  *
- * Usa @ngneat/falso para generar datos aleatorios realistas.
+ * Usar @ngneat/falso para generar datos aleatorios realistas.
  * Esta librería es moderna, TypeScript-native y compatible con Jest.
  */
 
