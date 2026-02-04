@@ -5,6 +5,10 @@ import type { User } from '@/domain/entities/User';
 import type SecurityServices from '@/domain/services/SecurityServices';
 
 export class SecurityBcryptService implements SecurityServices {
+  verifyJWT(token: string): string {
+    const data = jwt.verify(token, this.jwtSecret) as { userId: string };
+    return data.userId;
+  }
   private readonly jwtSecret: string = 'werikufghweyu8uur';
 
   generateJWT(user: User): Promise<string> {

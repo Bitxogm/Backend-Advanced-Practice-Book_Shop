@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '@config/constants';
 import { CreateBookUseCase } from '@domain/use-cases/book/create-book-usecase';
 import { BookMongodbRepository } from '@/infrastructure/repositories/book/book-mongodb-repository';
+import { SecurityBcryptService } from '@/infrastructure/services/security-bcrypt-service';
 
 // ============================================
 // TIPOS PARA LAS PETICIONES
@@ -14,17 +15,33 @@ export const createBookController = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { title, description, price, author, ownerId } = req.body;
+    const { title, description, price, author } = req.body;
 
     // Validar que vengan todos los campos obligatorios
-    if (!title || !description || price === undefined || !author || !ownerId) {
+    if (!title || !description || price === undefined || !author) {
       res.status(HTTP_STATUS.BAD_REQUEST).json({ message: ERROR_MESSAGES.REQUIRED_FIELDS });
       return;
     }
 
     // Validar que el precio no sea negativo
+
     if (price < 0) {
       res.status(HTTP_STATUS.BAD_REQUEST).json({ message: 'El precio no puede ser negativo' });
+      return;
+    }
+
+    const authenticationHeader = req.headers.authorization;
+    if (!authenticationHeader || !authenticationHeader.startsWith('Bearer ')) {
+      res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: 'Unauthorized' });
+      return;
+    }
+    const token = authenticationHeader.split(' ')[1];
+    const securityService = new SecurityBcryptService();
+    let userId: string;
+    try {
+      userId = securityService.verifyJWT(token);
+    } catch (err) {
+      res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: 'Invalid token' });
       return;
     }
 
@@ -39,7 +56,8 @@ export const createBookController = async (
       description,
       price,
       author,
-      ownerId,
+      ownerId: userId,
+      userId,
     });
 
     // Responder con el libro creado

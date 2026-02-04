@@ -16,6 +16,7 @@ import { getAllBooksController } from '@ui/controllers/book/getAll-books-control
 import { getBookByIdController } from '@ui/controllers/book/getBook-byId-controller';
 import { deleteBookController } from '@ui/controllers/book/delete-book-controller';
 import { updateBookController } from '@ui/controllers/book/update-book-controller';
+import { authenticationMiddleware } from '../middlewares/authentication-middleware';
 
 // ============================================
 // TIPOS PARA LAS PETICIONES
@@ -42,7 +43,7 @@ bookRouter.get('/:bookId', getBookByIdController);
 // POST /books - Crear un nuevo libro
 // ============================================
 // TODO: Cuando implementes autenticación, el ownerId vendrá del token JWT
-bookRouter.post('/', createBookController);
+bookRouter.post('/', [authenticationMiddleware], createBookController);
 
 // ============================================
 // PATCH /books/:bookId - Actualizar un libro

@@ -19,13 +19,15 @@ export const signupController = async (req: Request, res: Response) => {
     if (!email || !password) {
       throw new Error(ERROR_MESSAGES.EMAIL_AND_PASSWORD_REQUIRED);
     }
-    await createUserUseCase.execute({
+    const createdUser = await createUserUseCase.execute({
       email: email as string,
       password: password as string,
     });
+    // Generar token JWT para el nuevo usuario
+    const token = await securityBcryptService.generateJWT(createdUser);
     res
       .status(HTTP_STATUS.CREATED)
-      .json({ message: SUCCESS_MESSAGES.USER_CREATED ?? 'User created successfully' });
+      .json({ message: SUCCESS_MESSAGES.USER_CREATED ?? 'User created successfully', token });
   } catch (error) {
     console.error('Signup error:', error);
     if (error instanceof Error && error.message === ERROR_MESSAGES.EMAIL_AND_PASSWORD_REQUIRED) {
