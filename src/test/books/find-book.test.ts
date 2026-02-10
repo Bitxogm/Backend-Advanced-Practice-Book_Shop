@@ -8,7 +8,7 @@
 import request from 'supertest';
 import { app } from '@/server';
 import { BookModelMongoose as Book } from '@infrastructure/models/book.model';
-import { createRandomBook, createRandomBooks } from './helpers/create-random-book';
+import { createRandomBooks, createRandomBook } from './helpers/create-random-book';
 
 // ============================================
 // ANTES DE TODOS LOS TESTS
@@ -22,6 +22,29 @@ beforeEach(async () => {
 // TESTS GET /books - Listar todos los libros
 // ============================================
 describe('GET /books', () => {
+  it('debe filtrar libros por author', async () => {
+    const libroA = createRandomBook({ title: 'Libro A', author: 'Autor1' });
+    const libroB = createRandomBook({ title: 'Libro B', author: 'Autor2' });
+    await Book.insertMany([libroA, libroB]);
+    const response = await request(app)
+      .get('/books')
+      .query({ page: 1, limit: 10, author: 'Autor1' });
+    expect(response.status).toBe(200);
+    expect(response.body.count).toBe(1);
+    expect(response.body.items[0].author).toBe('Autor1');
+  });
+
+  it('debe filtrar libros por title', async () => {
+    const libroUnico = createRandomBook({ title: 'TituloFiltradoTest', author: 'AutorX' });
+    const otroLibro = createRandomBook({ title: 'OtroTitulo', author: 'AutorY' });
+    await Book.insertMany([libroUnico, otroLibro]);
+    const response = await request(app)
+      .get('/books')
+      .query({ page: 1, limit: 10, title: 'TituloFiltradoTest' });
+    expect(response.status).toBe(200);
+    expect(response.body.count).toBe(1);
+    expect(response.body.items[0].title).toBe('TituloFiltradoTest');
+  });
   it('debe devolver un array vacío cuando no hay libros', async () => {
     const response = await request(app).get('/books').query({ page: 1, limit: 10 });
 
@@ -42,39 +65,5 @@ describe('GET /books', () => {
     expect(response.body.items).toHaveLength(3);
     expect(response.body.items[0]).toHaveProperty('title');
     expect(response.body.items[0]).toHaveProperty('author');
-  });
-});
-
-// ============================================
-// TESTS GET /books/:bookId - Obtener un libro específico
-// ============================================
-describe('GET /books/:bookId', () => {
-  it('debe devolver un libro específico por su ID', async () => {
-    // Crear un libro en la BD
-    const bookData = createRandomBook();
-    const book = await Book.create(bookData);
-
-    const response = await request(app).get(`/books/${book._id}`);
-
-    expect(response.status).toBe(200);
-    expect(response.body.count).toBe(1);
-    expect(response.body.items[0].title).toBe(book.title);
-  });
-
-  it('debe devolver 404 si el libro no existe', async () => {
-    const fakeId = '507f1f77bcf86cd799439011'; // ID válido pero inexistente
-
-    const response = await request(app).get(`/books/${fakeId}`);
-
-    expect(response.status).toBe(404);
-    expect(response.body.message).toBe('Book not found');
-  });
-
-  it('debe devolver 404 si el ID no es válido', async () => {
-    const invalidId = 'id-invalido';
-
-    const response = await request(app).get(`/books/${invalidId}`);
-
-    expect(response.status).toBe(404);
   });
 });

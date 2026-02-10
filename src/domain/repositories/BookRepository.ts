@@ -1,5 +1,5 @@
 import Book from '../entities/Book';
-import { Pagination } from '../types/Pagination';
+import { bookFindQuery } from '../types/BookFindQuery';
 
 // Aqui deefinimo la interfaz del repositorio de libros
 
@@ -18,7 +18,7 @@ export interface IBookRepository {
     ownerId?: string;
   }): Promise<Book>;
 
-  getAll({ page, limit }: Pagination): Promise<Book[]>;
+  getAll(query: bookFindQuery): Promise<Book[]>;
 
   update(book: Book): Promise<Book | null>;
 

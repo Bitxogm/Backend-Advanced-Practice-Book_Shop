@@ -18,14 +18,16 @@ const paginationValidator = z.object({
     .int('limit debe ser un número entero')
     .positive('limit debe ser un número positivo')
     .max(100, 'limit no puede exceder 100'),
+  author: z.string().optional(),
+  title: z.string().optional(),
 });
 
 export const getAllBooksController = async (request: Request, response: Response) => {
   try {
-    const { page, limit } = paginationValidator.parse(request.query);
+    const { page, limit, author, title } = paginationValidator.parse(request.query);
     const booksMongodbRepository = new BookMongodbRepository();
     const getAllBooksUseCase = new GetAllBooksUseCase(booksMongodbRepository);
-    const books = await getAllBooksUseCase.execute({ page, limit });
+    const books = await getAllBooksUseCase.execute({ page, limit, author, title });
 
     if (!books || books.length === 0) {
       return response.status(HTTP_STATUS.OK).json({

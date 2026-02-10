@@ -2,6 +2,7 @@ import { BookModelMongoose as BookModel } from '@infrastructure/models/book.mode
 import { IBookRepository } from '@domain/repositories/BookRepository';
 import { Book } from '@domain/entities/Book';
 import { Pagination } from '@/domain/types/Pagination';
+import { bookFindQuery } from '@/domain/types/BookFindQuery';
 
 export class BookMongodbRepository implements IBookRepository {
   async update(book: Book): Promise<Book | null> {
@@ -72,10 +73,19 @@ export class BookMongodbRepository implements IBookRepository {
     });
   }
 
-  async getAll({ page, limit }: Pagination): Promise<Book[]> {
+  async getAll({ page, limit, author, title }: bookFindQuery): Promise<Book[]> {
+    let searchQuery = {};
+
+    if (author) {
+      searchQuery = { ...searchQuery, author: new RegExp(author, 'i') }; // Búsqueda insensible a mayúsculas
+    }
+
+    if (title) {
+      searchQuery = { ...searchQuery, title: new RegExp(title, 'i') }; // Búsqueda insensible a mayúsculas
+    }
     const skip = (page - 1) * limit;
 
-    const booksFromDb = await BookModel.find().skip(skip).limit(limit).exec();
+    const booksFromDb = await BookModel.find(searchQuery).skip(skip).limit(limit).exec();
 
     return booksFromDb.map(book => {
       return new Book({
