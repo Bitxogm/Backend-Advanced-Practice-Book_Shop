@@ -16,6 +16,8 @@ export interface CreateRandomBookData {
   price: number;
   author: string;
   ownerId: string;
+  status: 'PUBLISHED' | 'SOLD';
+  soldAt: Date | null;
 }
 
 /**
@@ -41,6 +43,8 @@ export const createRandomBook = (
     price: randNumber({ min: 5, max: 100, precision: 0.01 }), // Precio entre 5 y 100
     author: randFullName(), // Nombre completo aleatorio
     ownerId: '000000000000000000000000', // ID temporal (cambiar cuando tengas auth)
+    status: 'PUBLISHED',
+    soldAt: null,
     ...overrides, // Sobrescribe los campos que vengan en overrides
   };
 };

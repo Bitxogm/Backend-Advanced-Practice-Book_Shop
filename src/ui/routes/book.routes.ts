@@ -1,3 +1,7 @@
+import { buyBookController } from '@ui/controllers/book/buy-book-controller';
+// ============================================
+// POST /books/:bookId/buy - Comprar un libro
+// ============================================
 /**
  * RUTAS DE LIBROS (BOOK ROUTES)
  *
@@ -27,6 +31,7 @@ import { authenticationMiddleware } from '../middlewares/authentication-middlewa
 // CREAR EL ROUTER
 // ============================================
 const bookRouter: express.Router = express.Router();
+bookRouter.post('/:bookId/buy', [authenticationMiddleware], buyBookController);
 
 // ============================================
 // GET /books - Listar todos los libros publicados
