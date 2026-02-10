@@ -23,7 +23,7 @@ beforeEach(async () => {
 // ============================================
 describe('GET /books', () => {
   it('debe devolver un array vacío cuando no hay libros', async () => {
-    const response = await request(app).get('/books');
+    const response = await request(app).get('/books').query({ page: 1, limit: 10 });
 
     expect(response.status).toBe(200);
     expect(response.body.count).toBe(0);
@@ -35,7 +35,7 @@ describe('GET /books', () => {
     const booksData = createRandomBooks(3);
     await Book.insertMany(booksData);
 
-    const response = await request(app).get('/books');
+    const response = await request(app).get('/books').query({ page: 1, limit: 10 });
 
     expect(response.status).toBe(200);
     expect(response.body.count).toBe(3);

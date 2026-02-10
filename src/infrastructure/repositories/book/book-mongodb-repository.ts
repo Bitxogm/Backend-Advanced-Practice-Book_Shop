@@ -1,6 +1,7 @@
 import { BookModelMongoose as BookModel } from '@infrastructure/models/book.model';
 import { IBookRepository } from '@domain/repositories/BookRepository';
 import { Book } from '@domain/entities/Book';
+import { Pagination } from '@/domain/types/Pagination';
 
 export class BookMongodbRepository implements IBookRepository {
   async update(book: Book): Promise<Book | null> {
@@ -71,8 +72,10 @@ export class BookMongodbRepository implements IBookRepository {
     });
   }
 
-  async getAll(): Promise<Book[]> {
-    const booksFromDb = await BookModel.find();
+  async getAll({ page, limit }: Pagination): Promise<Book[]> {
+    const skip = (page - 1) * limit;
+
+    const booksFromDb = await BookModel.find().skip(skip).limit(limit).exec();
 
     return booksFromDb.map(book => {
       return new Book({

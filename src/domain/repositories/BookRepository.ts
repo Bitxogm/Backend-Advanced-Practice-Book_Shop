@@ -1,4 +1,5 @@
 import Book from '../entities/Book';
+import { Pagination } from '../types/Pagination';
 
 // Aqui deefinimo la interfaz del repositorio de libros
 
@@ -16,9 +17,8 @@ export interface IBookRepository {
     author: string;
     ownerId?: string;
   }): Promise<Book>;
-  // Aquí irán otros métodos como:
 
-  getAll(): Promise<Book[]>;
+  getAll({ page, limit }: Pagination): Promise<Book[]>;
 
   update(book: Book): Promise<Book | null>;
 
