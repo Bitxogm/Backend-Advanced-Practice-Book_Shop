@@ -1,67 +1,39 @@
+// src/ui/routes/book.routes.ts
 import { buyBookController } from '@ui/controllers/book/buy-book-controller';
-// ============================================
-// POST /books/:bookId/buy - Comprar un libro
-// ============================================
-/**
- * RUTAS DE LIBROS (BOOK ROUTES)
- *
- * Este archivo define todas las rutas (endpoints) de la API para libros.
- * Cada ruta maneja una operación CRUD:
- * - GET    = Leer/Obtener datos
- * - POST   = Crear datos nuevos
- * - PATCH  = Actualizar datos parcialmente
- * - DELETE = Eliminar datos
- */
-
 import express from 'express';
-
 import { createBookController } from '@ui/controllers/book/create-book-controllers';
 import { getAllBooksController } from '@ui/controllers/book/getAll-books-controller';
 import { getBookByIdController } from '@ui/controllers/book/getBook-byId-controller';
 import { deleteBookController } from '@ui/controllers/book/delete-book-controller';
 import { updateBookController } from '@ui/controllers/book/update-book-controller';
+import { getMyBooksController } from '@ui/controllers/book/get-my-books-controller';
 import { authenticationMiddleware } from '../middlewares/authentication-middleware';
 
-// ============================================
-// TIPOS PARA LAS PETICIONES
-// ============================================
-// Define qué datos esperamos recibir en cada petición
-
-// ============================================
-// CREAR EL ROUTER
-// ============================================
 const bookRouter: express.Router = express.Router();
-bookRouter.post('/:bookId/buy', [authenticationMiddleware], buyBookController);
 
 // ============================================
-// GET /books - Listar todos los libros publicados
+// ORDEN CRÍTICO: /me DEBE IR ANTES DE /:bookId
 // ============================================
-// Ruta pública que devuelve todos los libros disponibles
+
+// GET /books - Listar todos públicos
 bookRouter.get('/', getAllBooksController);
 
-// ============================================
-// GET /books/:bookId - Obtener un libro específico
-// ============================================
-bookRouter.get('/:bookId', getBookByIdController);
-
-// ============================================
-// POST /books - Crear un nuevo libro
-// ============================================
-// TODO: Cuando implementes autenticación, el ownerId vendrá del token JWT
+// POST /books - Crear libro (privado)
 bookRouter.post('/', [authenticationMiddleware], createBookController);
 
-// ============================================
-// PATCH /books/:bookId - Actualizar un libro
-// ============================================
-// Solo permite actualizar: título, descripción, precio y autor
+// GET /books/me - Mis libros (privado)
+bookRouter.get('/me', [authenticationMiddleware], getMyBooksController);
+
+// POST /books/:bookId/buy - Comprar libro (privado)
+bookRouter.post('/:bookId/buy', [authenticationMiddleware], buyBookController);
+
+// GET /books/:bookId - Ver libro específico
+bookRouter.get('/:bookId', getBookByIdController);
+
+// PATCH /books/:bookId - Actualizar libro (privado)
 bookRouter.patch('/:bookId', [authenticationMiddleware], updateBookController);
 
-// ============================================
-// DELETE /books/:bookId - Eliminar un libro
-// ============================================
+// DELETE /books/:bookId - Eliminar libro (privado)
 bookRouter.delete('/:bookId', [authenticationMiddleware], deleteBookController);
 
-// ============================================
-// EXPORTAR EL ROUTER
-// ============================================
 export default bookRouter;

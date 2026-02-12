@@ -20,6 +20,8 @@ export interface IBookRepository {
 
   getAll(query: bookFindQuery): Promise<Book[]>;
 
+  findByOwnerId(ownerId: string): Promise<Book[]>;
+
   update(book: Book): Promise<Book | null>;
 
   delete(id: string): Promise<Book | null>;

@@ -7,7 +7,6 @@ import { app } from '@/server';
 describe('Sign Up Authentication Tests', () => {
   test('should create user with email and password', async () => {
     const response = await request(app).post('/auth/signup').send();
-    console.log(response.body);
 
     expect(response.status).toBe(400);
   });

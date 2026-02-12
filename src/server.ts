@@ -12,11 +12,11 @@
  * 5. Arrancar el servidor en el puerto especificado
  */
 
-import express from 'express';
-import type { Application } from 'express';
 import { connectDB } from '@config/database';
 import { env } from '@config/environment';
 import bookRouter from '@ui/routes/book.routes';
+import type { Application } from 'express';
+import express from 'express';
 import authenticationRouter from './ui/routes/authentication.routes';
 
 // ============================================
@@ -52,6 +52,22 @@ const startHttpApi = (): void => {
   });
 };
 
+// const startCronJobs = () => {
+//   const WeeklyReportEmailJob_weekly_monday_at_10 = '0 10 * * 1';
+
+//   cron.schedule(WeeklyReportEmailJob_weekly_monday_at_10, () => {
+//     const userRepository = new UserMongoRepository();
+//     // const bookRepository = new BookMongodbRepository();
+//     // const emailService = new MailtrapService();
+//     // const sendProductReportUsecase = new SendProductReportUseCase(
+//     //   userRepository,
+//     //   bookRepository,
+//     //   emailService
+//     // );
+//     // void sendProductReportUsecase.execute();
+//   });
+// };
+
 // ============================================
 // 5. FUNCIÓN PRINCIPAL DE LA APLICACIÓN
 // ============================================
@@ -64,6 +80,7 @@ const executeApp = async (): Promise<void> => {
 
     // Paso 2: Arrancar el servidor HTTP
     startHttpApi();
+    // startCronJobs();
   } catch (error) {
     console.error('❌ Error al iniciar la aplicación:', error);
     process.exit(1); // Detener la aplicación con código de error

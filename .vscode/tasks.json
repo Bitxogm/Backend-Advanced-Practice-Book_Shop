@@ -1,0 +1,98 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "npm install",
+      "type": "shell",
+      "command": "npm",
+      "args": ["install"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "npm start",
+      "type": "shell",
+      "command": "npm",
+      "args": ["start"],
+      "group": {
+        "kind": "test"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^.*$",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*",
+          "endsPattern": ".*listening.*"
+        }
+      }
+    },
+    {
+      "label": "npm test",
+      "type": "shell",
+      "command": "npm",
+      "args": ["test"],
+      "group": {
+        "kind": "test"
+      },
+      "problemMatcher": ["$jest"]
+    },
+    {
+      "label": "npm run build",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "build"],
+      "group": {
+        "kind": "build"
+      },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "npm run lint",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "lint"],
+      "group": {
+        "kind": "build"
+      },
+      "problemMatcher": ["$eslint-stylish"]
+    },
+    {
+      "label": "npm run lint:fix",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "lint:fix"],
+      "group": {
+        "kind": "build"
+      }
+    },
+    {
+      "label": "Docker compose up",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["up", "-d"],
+      "group": {
+        "kind": "build"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker compose down",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["down"],
+      "group": {
+        "kind": "build"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "recommendations": [
+    // TypeScript & JavaScript
+    "ms-vscode.vscode-typescript-next",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    // Testing
+    "firsttris.vscode-jest-runner",
+    "orta.vscode-jest",
+
+    // Git & Version Control
+    "eamodio.gitlens",
+    "GitHub.copilot",
+
+    // Environment & Config
+    "mikestead.dotenv",
+    "bradlc.vscode-tailwindcss",
+
+    // Docker
+    "ms-vscode-remote.remote-containers",
+    "ms-vscode-remote.remote-ssh",
+
+    // Database
+    "cweijan.vscode-mongodb-client",
+    "cweijan.vscode-database-client",
+
+    // Utilities
+    "wayou.vscode-todo-highlight",
+    "ms-vscode.makefile-tools",
+    "chrisdias.vscode-opennewinstance",
+    "pkief.material-icon-theme",
+    "shardulm94.trailing-spaces",
+    "alefragnani.peacock",
+    "redhat.vscode-yaml",
+
+    // REST Client
+    "humao.rest-client"
+  ]
+}

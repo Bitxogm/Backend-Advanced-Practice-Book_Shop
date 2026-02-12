@@ -1,4 +1,58 @@
 {
+  // ========== EDITOR BASICS ==========
+  "editor.fontSize": 14,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.trimAutoWhitespace": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  // ========== FORMATTING ==========
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  // ========== TYPESCRIPT ==========
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.preferences.quotePreference": "single",
+  "typescript.preferences.importModuleSpecifierPreference": "relative",
+
+  // ========== ESLINT ==========
+  "eslint.enable": true,
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.probe": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+
+  // ========== FILES & SEARCH ==========
+  "files.exclude": {
+    "**/.git": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.DS_Store": true,
+    "**/coverage": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/coverage": true,
+    "**/.git": true
+  },
+
+  // ========== JEST TESTING ==========
+  "jest.runMode": "on-demand",
+  "jest.showCoverageOnLoad": false,
+  "jest.autoRevealOutput": "off",
+
+  // ========== COLOR CUSTOMIZATION (mantiene tu tema) ==========
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#33ff33",
     "activityBar.background": "#33ff33",
@@ -18,5 +72,10 @@
     "titleBar.inactiveBackground": "#00ff0099",
     "titleBar.inactiveForeground": "#15202b99"
   },
-  "peacock.color": "#00ff00"
+  "peacock.color": "#00ff00",
+
+  // ========== GIT ==========
+  "git.autofetch": true,
+  "gitlens.codeLens.enabled": true,
+  "testing.automaticallyOpenTestResults": "neverOpen"
 }

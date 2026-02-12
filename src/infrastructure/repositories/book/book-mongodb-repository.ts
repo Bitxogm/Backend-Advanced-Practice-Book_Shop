@@ -1,10 +1,25 @@
-import { BookModelMongoose as BookModel } from '@infrastructure/models/book.model';
-import { IBookRepository } from '@domain/repositories/BookRepository';
-import { Book } from '@domain/entities/Book';
-import { Pagination } from '@/domain/types/Pagination';
 import { bookFindQuery } from '@/domain/types/BookFindQuery';
+import { Book } from '@domain/entities/Book';
+import { IBookRepository } from '@domain/repositories/BookRepository';
+import { BookModelMongoose as BookModel } from '@infrastructure/models/book.model';
 
 export class BookMongodbRepository implements IBookRepository {
+  async findByOwnerId(ownerId: string): Promise<Book[]> {
+    const booksFromDb = await BookModel.find({ ownerId }).exec();
+
+    return booksFromDb.map(book => {
+      return new Book({
+        id: book._id.toString(),
+        title: book.title,
+        description: book.description,
+        price: book.price,
+        author: book.author,
+        status: book.status,
+        ownerId: book.ownerId.toString(),
+        soldAt: book.soldAt,
+      });
+    });
+  }
   async update(book: Book): Promise<Book | null> {
     const updatedBook = await BookModel.findByIdAndUpdate(
       book.id,

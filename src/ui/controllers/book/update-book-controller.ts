@@ -1,15 +1,12 @@
-import { Request, Response } from 'express';
-import type { AuthenticatedRequest } from '../../middlewares/authentication-middleware';
 import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '@config/constants';
+import type { AuthenticatedRequest } from '@ui/middlewares/authentication-middleware';
+import type { Response } from 'express';
 
-import { UpdateBookUseCase } from '@domain/use-cases/book/update-book-usecase';
 import { BookMongodbRepository } from '@/infrastructure/repositories/book/book-mongodb-repository';
-import type { UpdateBookDTO, BookResponseDTO } from '../../dto/book.dto';
+import { UpdateBookUseCase } from '@domain/use-cases/book/update-book-usecase';
+import type { BookResponseDTO, UpdateBookDTO } from '../../dto/book.dto';
 
-export const updateBookController = async (
-  request: Request<{ bookId: string }, UpdateBookDTO>,
-  response: Response
-) => {
+export const updateBookController = async (request: AuthenticatedRequest, response: Response) => {
   try {
     const { bookId } = request.params;
     const updateData: UpdateBookDTO = request.body;

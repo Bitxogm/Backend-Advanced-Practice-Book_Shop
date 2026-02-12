@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
-import { ERROR_MESSAGES, HTTP_STATUS } from '@config/constants';
 import { BookMongodbRepository } from '@/infrastructure/repositories/book/book-mongodb-repository';
+import { ERROR_MESSAGES, HTTP_STATUS } from '@config/constants';
 import { BuyBookUseCase } from '@domain/use-cases/book/buy-book-usecase';
+import type { AuthenticatedRequest } from '@ui/middlewares/authentication-middleware';
+import { Response } from 'express';
 
-export const buyBookController = async (req: Request, res: Response) => {
+export const buyBookController = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user?.id; // Asumimos que el middleware de autenticación añade user al request
     const bookId = req.params.bookId;

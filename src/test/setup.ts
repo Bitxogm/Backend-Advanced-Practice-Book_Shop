@@ -26,7 +26,7 @@ beforeAll(async () => {
     const uri = mongo.getUri();
     await mongoose.connect(uri);
 
-    console.log('✅ MongoDB Memory Server iniciado correctamente');
+    // console.log('✅ MongoDB Memory Server iniciado correctamente');
   } catch (error) {
     console.error('❌ Error al iniciar MongoDB Memory Server:', error);
     throw error;

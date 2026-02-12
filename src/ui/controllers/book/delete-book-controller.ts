@@ -1,18 +1,18 @@
-import { type Request, type Response } from 'express';
-import type { AuthenticatedRequest } from '../../middlewares/authentication-middleware';
+import { BookMongodbRepository } from '@/infrastructure/repositories/book/book-mongodb-repository';
 import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from '@config/constants';
 import { DeleteBookUseCase } from '@domain/use-cases/book/delete-book-usecase';
-import { BookMongodbRepository } from '@/infrastructure/repositories/book/book-mongodb-repository';
+import type { AuthenticatedRequest } from '@ui/middlewares/authentication-middleware';
+import type { Response } from 'express';
 import type { BookResponseDTO } from '../../dto/book.dto';
 
-export const deleteBookController = async (request: Request, response: Response) => {
+export const deleteBookController = async (request: AuthenticatedRequest, response: Response) => {
   try {
     const { bookId } = request.params;
 
     // Buscar y eliminar el libro
     const bookMongodbRepository = new BookMongodbRepository();
     const deleteBookUseCase = new DeleteBookUseCase(bookMongodbRepository);
-    const { user } = request as AuthenticatedRequest;
+    const { user } = request;
     if (!user || !user.id) {
       response.status(HTTP_STATUS.UNAUTHORIZED).json({ message: 'Unauthorized' });
       return;
