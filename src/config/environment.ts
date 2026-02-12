@@ -17,4 +17,9 @@ export const env = {
 
   // El entorno en el que estamos (desarrollo, producción, test)
   NODE_ENV: process.env.NODE_ENV || 'development',
+
+  EMAIL_HOST: process.env.EMAIL_HOST || 'smtp.ethereal.email',
+  EMAIL_PORT: Number(process.env.EMAIL_PORT) || 587,
+  EMAIL_USER: process.env.EMAIL_USER || '',
+  EMAIL_PASS: process.env.EMAIL_PASS || '',
 };

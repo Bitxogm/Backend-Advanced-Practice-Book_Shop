@@ -12,6 +12,8 @@
  * 5. Arrancar el servidor en el puerto especificado
  */
 
+import dotenv from 'dotenv';
+dotenv.config();
 import { connectDB } from '@config/database';
 import { env } from '@config/environment';
 import bookRouter from '@ui/routes/book.routes';
@@ -51,22 +53,6 @@ const startHttpApi = (): void => {
     console.log(`📚 Rutas disponibles: http://localhost:${env.PORT}/books`);
   });
 };
-
-// const startCronJobs = () => {
-//   const WeeklyReportEmailJob_weekly_monday_at_10 = '0 10 * * 1';
-
-//   cron.schedule(WeeklyReportEmailJob_weekly_monday_at_10, () => {
-//     const userRepository = new UserMongoRepository();
-//     // const bookRepository = new BookMongodbRepository();
-//     // const emailService = new MailtrapService();
-//     // const sendProductReportUsecase = new SendProductReportUseCase(
-//     //   userRepository,
-//     //   bookRepository,
-//     //   emailService
-//     // );
-//     // void sendProductReportUsecase.execute();
-//   });
-// };
 
 // ============================================
 // 5. FUNCIÓN PRINCIPAL DE LA APLICACIÓN

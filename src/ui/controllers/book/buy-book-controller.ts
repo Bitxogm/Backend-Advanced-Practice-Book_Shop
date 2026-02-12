@@ -1,4 +1,6 @@
 import { BookMongodbRepository } from '@/infrastructure/repositories/book/book-mongodb-repository';
+import { UserMongoRepository } from '@/infrastructure/repositories/user/user-mongodb-repository'; // ⬅️ AÑADIR
+import { NodeMailerEmailService } from '@/infrastructure/services/nodemailer-email-service'; // ⬅️ AÑADIR
 import { ERROR_MESSAGES, HTTP_STATUS } from '@config/constants';
 import { BuyBookUseCase } from '@domain/use-cases/book/buy-book-usecase';
 import type { AuthenticatedRequest } from '@ui/middlewares/authentication-middleware';
@@ -6,13 +8,21 @@ import { Response } from 'express';
 
 export const buyBookController = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const userId = req.user?.id; // Asumimos que el middleware de autenticación añade user al request
+    const userId = req.user?.id;
     const bookId = req.params.bookId;
+
     if (!userId) {
       return res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: 'Unauthorized' });
     }
+
+    // ⬇️ AÑADIR ESTAS 2 LÍNEAS
     const booksRepo = new BookMongodbRepository();
-    const buyBookUseCase = new BuyBookUseCase(booksRepo);
+    const userRepo = new UserMongoRepository();
+    const emailService = new NodeMailerEmailService();
+
+    // ⬇️ PASAR LAS 3 DEPENDENCIAS
+    const buyBookUseCase = new BuyBookUseCase(booksRepo, userRepo, emailService);
+
     const result = await buyBookUseCase.execute({ bookId, userId });
     return res.status(HTTP_STATUS.OK).json(result);
   } catch (error) {

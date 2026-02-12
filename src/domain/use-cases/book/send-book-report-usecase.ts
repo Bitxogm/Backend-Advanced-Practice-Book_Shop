@@ -1,7 +1,8 @@
 //crear cron job , para enviar reporte a usuario cuando un libro pase de published a sold
 
-import { IBookRepository } from '@/domain/repositories/BookRepository';
-import { UserRepository } from '@/domain/repositories/UserRepository';
+import { IBookRepository } from '@domain/repositories/BookRepository';
+import type { UserRepository } from '@domain/repositories/UserRepository';
+import type { EmailService } from '@domain/services/EmailService';
 
 export class SendBookReportUseCase {
   private readonly userRepository: UserRepository;
