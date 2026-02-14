@@ -1,7 +1,6 @@
 import type { Document } from 'mongoose';
 import mongoose from 'mongoose';
 
-// Importamos mongoose y Document para definir la interfaz del producto y tener metodos de mongoose disponibles.
 export interface IUser extends Document {
   email: string;
   password: string;
@@ -21,7 +20,6 @@ const UserSchema = new mongoose.Schema<IUser>(
     },
   },
   {
-    // Añadimos timestamps para tener createdAt y updatedAt automáticamente
     timestamps: true,
   }
 );

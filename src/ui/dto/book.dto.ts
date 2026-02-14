@@ -1,4 +1,3 @@
-// DTO para la petición de creación de libro desde la API
 export interface BookRequestDTO {
   title: string;
   description: string;
@@ -7,7 +6,6 @@ export interface BookRequestDTO {
   ownerId: string;
 }
 
-// DTO para la petición de actualización de libro desde la API
 export interface UpdateBookDTO {
   title?: string;
   description?: string;
@@ -18,7 +16,6 @@ export interface UpdateBookDTO {
   soldAt?: Date | null;
 }
 
-// DTO para la respuesta de libro hacia la API
 export interface BookResponseDTO {
   id: string;
   title: string;

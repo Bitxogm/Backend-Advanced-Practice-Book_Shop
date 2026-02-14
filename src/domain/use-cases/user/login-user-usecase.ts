@@ -5,7 +5,7 @@ import { ERROR_MESSAGES } from '@/config/constants';
 export class LoginUserUseCase {
   private readonly userRepository: UserRepository;
 
-  private readonly securityService: SecurityServices; // Agrega el servicio de seguridad si es necesario
+  private readonly securityService: SecurityServices;
 
   constructor(userRepository: UserRepository, securityService: SecurityServices) {
     this.userRepository = userRepository;

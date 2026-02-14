@@ -15,12 +15,10 @@ export const buyBookController = async (req: AuthenticatedRequest, res: Response
       return res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: 'Unauthorized' });
     }
 
-    // ⬇️ AÑADIR ESTAS 2 LÍNEAS
     const booksRepo = new BookMongodbRepository();
     const userRepo = new UserMongoRepository();
     const emailService = new NodeMailerEmailService();
 
-    // ⬇️ PASAR LAS 3 DEPENDENCIAS
     const buyBookUseCase = new BuyBookUseCase(booksRepo, userRepo, emailService);
 
     const result = await buyBookUseCase.execute({ bookId, userId });

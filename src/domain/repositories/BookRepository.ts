@@ -1,8 +1,6 @@
 import Book from '../entities/Book';
 import { bookFindQuery } from '../types/BookFindQuery';
 
-// Aqui deefinimo la interfaz del repositorio de libros
-
 export interface IBookRepository {
   createOneBook({
     title,
@@ -21,6 +19,8 @@ export interface IBookRepository {
   getAll(query: bookFindQuery): Promise<Book[]>;
 
   findByOwnerId(ownerId: string): Promise<Book[]>;
+
+  findOldPublishedBooks(daysOld: number): Promise<Book[]>;
 
   update(book: Book): Promise<Book | null>;
 

@@ -7,6 +7,7 @@ export class Book {
   readonly status: 'PUBLISHED' | 'SOLD';
   readonly ownerId: string;
   readonly soldAt: Date | null;
+  readonly createdAt: Date = new Date();
 
   constructor({
     id,

@@ -9,7 +9,6 @@ export const getBookByIdController = async (request: Request, response: Response
   try {
     const { bookId } = request.params;
 
-    // Validación de infraestructura: ID válido de MongoDB (24 caracteres hexadecimales)
     if (!bookId.match(/^[0-9a-fA-F]{24}$/)) {
       return response.status(HTTP_STATUS.NOT_FOUND).json({
         message: ERROR_MESSAGES.BOOK_NOT_FOUND,

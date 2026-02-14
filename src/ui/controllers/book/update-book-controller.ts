@@ -11,7 +11,6 @@ export const updateBookController = async (request: AuthenticatedRequest, respon
     const { bookId } = request.params;
     const updateData: UpdateBookDTO = request.body;
 
-    // Validar que haya al menos un campo para actualizar y que el body sea un objeto válido
     if (
       !updateData ||
       typeof updateData !== 'object' ||
@@ -22,17 +21,15 @@ export const updateBookController = async (request: AuthenticatedRequest, respon
       return;
     }
 
-    // Crear dependencias
     const bookMongodbRepository = new BookMongodbRepository();
     const updateBookUseCase = new UpdateBookUseCase(bookMongodbRepository);
 
-    // Obtener userId autenticado
     const { user } = request as AuthenticatedRequest;
     if (!user || !user.id) {
       response.status(HTTP_STATUS.UNAUTHORIZED).json({ message: 'Unauthorized' });
       return;
     }
-    // Ejecutar caso de uso con argumentos en orden correcto
+
     const updatedBook = await updateBookUseCase.execute(bookId, user.id, updateData);
 
     if (!updatedBook) {
@@ -40,7 +37,6 @@ export const updateBookController = async (request: AuthenticatedRequest, respon
       return;
     }
 
-    // Mapear Book a BookResponseDTO
     const responseDTO: BookResponseDTO = {
       id: updatedBook.id,
       title: updatedBook.title,

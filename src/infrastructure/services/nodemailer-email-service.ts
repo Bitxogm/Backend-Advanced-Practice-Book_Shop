@@ -2,6 +2,7 @@
 import nodemailer from 'nodemailer';
 import { env } from '../../config/environment';
 import type { EmailService } from '../../domain/services/EmailService';
+import { emailTemplates } from './email-templates';
 
 export class NodeMailerEmailService implements EmailService {
   private transporter;
@@ -43,25 +44,8 @@ export class NodeMailerEmailService implements EmailService {
         from: '"BookShop 📚" <noreply@bookshop.com>',
         to: sellerEmail,
         subject: '🎉 ¡Tu libro se ha vendido!',
-        html: `
-          <!DOCTYPE html>
-          <html>
-          <body style="font-family: Arial, sans-serif; padding: 20px;">
-            <div style="max-width: 600px; margin: 0 auto;">
-              <div style="background-color: #4CAF50; color: white; padding: 20px; text-align: center;">
-                <h1>¡Buenas noticias! 🎉</h1>
-              </div>
-              <div style="background-color: #f9f9f9; padding: 20px; margin-top: 20px;">
-                <p>Hola,</p>
-                <p>Tu libro <strong>"${bookTitle}"</strong> ha sido vendido.</p>
-                ${buyerEmail ? `<p>Comprador: ${buyerEmail}</p>` : ''}
-                <p>¡Gracias por usar BookShop!</p>
-              </div>
-            </div>
-          </body>
-          </html>
-        `,
-        text: `¡Tu libro "${bookTitle}" ha sido vendido!`,
+        html: emailTemplates.bookSold(bookTitle, buyerEmail),
+        text: `¡Tu libro "${bookTitle}" ha sido vendido!${buyerEmail ? ` Comprador: ${buyerEmail}` : ''}`,
       });
 
       console.log('✅ Email enviado correctamente');
@@ -74,6 +58,7 @@ export class NodeMailerEmailService implements EmailService {
       }
     } catch (error) {
       console.error('❌ Error al enviar email:', error);
+      throw error;
     }
   }
 
@@ -89,22 +74,7 @@ export class NodeMailerEmailService implements EmailService {
         from: '"BookShop 📚" <noreply@bookshop.com>',
         to: sellerEmail,
         subject: '💡 Sugerencia: ¿Considerar bajar el precio?',
-        html: `
-          <!DOCTYPE html>
-          <html>
-          <body style="font-family: Arial, sans-serif; padding: 20px;">
-            <div style="max-width: 600px; margin: 0 auto;">
-              <div style="background-color: #FF9800; color: white; padding: 20px; text-align: center;">
-                <h1>💡 Sugerencia para tu libro</h1>
-              </div>
-              <div style="background-color: #f9f9f9; padding: 20px; margin-top: 20px;">
-                <p>Tu libro <strong>"${bookTitle}"</strong> lleva ${daysPublished} días publicado.</p>
-                <p>💡 Consejo: Considera bajar el precio para aumentar las ventas.</p>
-              </div>
-            </div>
-          </body>
-          </html>
-        `,
+        html: emailTemplates.priceReductionSuggestion(bookTitle, daysPublished),
         text: `Tu libro "${bookTitle}" lleva ${daysPublished} días publicado. Considera bajar el precio.`,
       });
 
@@ -116,6 +86,7 @@ export class NodeMailerEmailService implements EmailService {
       }
     } catch (error) {
       console.error('❌ Error al enviar email:', error);
+      throw error;
     }
   }
 }

@@ -5,9 +5,6 @@ import { CreateBookUseCase } from '@domain/use-cases/book/create-book-usecase';
 import { BookMongodbRepository } from '@/infrastructure/repositories/book/book-mongodb-repository';
 import { SecurityBcryptService } from '@/infrastructure/services/security-bcrypt-service';
 
-// ============================================
-// TIPOS PARA LAS PETICIONES
-// ============================================
 import type { BookRequestDTO, BookResponseDTO } from '../../dto/book.dto';
 
 export const createBookController = async (
@@ -17,13 +14,10 @@ export const createBookController = async (
   try {
     const { title, description, price, author } = req.body;
 
-    // Validar que vengan todos los campos obligatorios
     if (!title || !description || price === undefined || !author) {
       res.status(HTTP_STATUS.BAD_REQUEST).json({ message: ERROR_MESSAGES.REQUIRED_FIELDS });
       return;
     }
-
-    // Validar que el precio no sea negativo
 
     if (price < 0) {
       res.status(HTTP_STATUS.BAD_REQUEST).json({ message: 'El precio no puede ser negativo' });
@@ -45,11 +39,8 @@ export const createBookController = async (
       return;
     }
 
-    // Crear dependencias
     const bookMongodbRepository = new BookMongodbRepository();
     const createBookUseCase = new CreateBookUseCase(bookMongodbRepository);
-
-    // Llamar al caso de uso para crear el libro
 
     const newBook = await createBookUseCase.execute({
       title,
@@ -60,8 +51,6 @@ export const createBookController = async (
       userId,
     });
 
-    // Responder con el libro creado
-    // Mapear Book (entidad de dominio) a BookResponseDTO
     const response: BookResponseDTO = {
       id: newBook.id,
       title: newBook.title,

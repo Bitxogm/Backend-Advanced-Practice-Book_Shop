@@ -9,7 +9,6 @@ export const deleteBookController = async (request: AuthenticatedRequest, respon
   try {
     const { bookId } = request.params;
 
-    // Buscar y eliminar el libro
     const bookMongodbRepository = new BookMongodbRepository();
     const deleteBookUseCase = new DeleteBookUseCase(bookMongodbRepository);
     const { user } = request;
@@ -22,7 +21,7 @@ export const deleteBookController = async (request: AuthenticatedRequest, respon
       response.status(HTTP_STATUS.NOT_FOUND).json({ message: ERROR_MESSAGES.BOOK_NOT_FOUND });
       return;
     }
-    // Mapear Book a BookResponseDTO si se desea retornar el libro eliminado
+
     const responseDTO: BookResponseDTO = {
       id: deletedBook.id,
       title: deletedBook.title,

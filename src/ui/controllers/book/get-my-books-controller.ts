@@ -7,7 +7,6 @@ import type { BookResponseDTO } from '../../dto/book.dto';
 
 export const getMyBooksController = async (request: AuthenticatedRequest, response: Response) => {
   try {
-    // Obtener el userId del middleware de autenticación
     const { user } = request;
 
     if (!user || !user.id) {
@@ -15,14 +14,11 @@ export const getMyBooksController = async (request: AuthenticatedRequest, respon
       return;
     }
 
-    // Crear repositorio y use case
     const bookMongodbRepository = new BookMongodbRepository();
     const getMyBooksUseCase = new GetMyBooksUseCase(bookMongodbRepository);
 
-    // Ejecutar caso de uso
     const myBooks = await getMyBooksUseCase.execute(user.id);
 
-    // Convertir entidades a DTOs
     const responseDTOs: BookResponseDTO[] = myBooks.map(book => ({
       id: book.id,
       title: book.title,

@@ -20,6 +20,29 @@ export class BookMongodbRepository implements IBookRepository {
       });
     });
   }
+
+  async findOldPublishedBooks(daysOld: number): Promise<Book[]> {
+    const thresholdDate = new Date();
+    thresholdDate.setDate(thresholdDate.getDate() - daysOld);
+
+    const booksFromDb = await BookModel.find({
+      status: 'PUBLISHED',
+      createdAt: { $lt: thresholdDate },
+    }).exec();
+
+    return booksFromDb.map(book => {
+      return new Book({
+        id: book._id.toString(),
+        title: book.title,
+        description: book.description,
+        price: book.price,
+        author: book.author,
+        status: book.status,
+        ownerId: book.ownerId.toString(),
+        soldAt: book.soldAt,
+      });
+    });
+  }
   async update(book: Book): Promise<Book | null> {
     const updatedBook = await BookModel.findByIdAndUpdate(
       book.id,
@@ -32,7 +55,7 @@ export class BookMongodbRepository implements IBookRepository {
         ownerId: book.ownerId,
         soldAt: book.soldAt,
       },
-      { new: true } // Returns the updated document
+      { new: true }
     );
 
     if (!updatedBook) {
@@ -89,14 +112,13 @@ export class BookMongodbRepository implements IBookRepository {
   }
 
   async getAll({ page, limit, author, title }: bookFindQuery): Promise<Book[]> {
-    let searchQuery = {};
-
+    const searchQuery: Record<string, any> = { status: 'PUBLISHED' };
     if (author) {
-      searchQuery = { ...searchQuery, author: new RegExp(author, 'i') }; // Búsqueda insensible a mayúsculas
+      searchQuery.author = new RegExp(author, 'i');
     }
 
     if (title) {
-      searchQuery = { ...searchQuery, title: new RegExp(title, 'i') }; // Búsqueda insensible a mayúsculas
+      searchQuery.title = new RegExp(title, 'i');
     }
     const skip = (page - 1) * limit;
 
@@ -115,8 +137,6 @@ export class BookMongodbRepository implements IBookRepository {
       });
     });
   }
-  // Aquí irán los métodos para interactuar con la base de datos
-  // Por ejemplo: create, findById, update, delete, etc.
 
   async createOneBook({
     title,
@@ -131,21 +151,17 @@ export class BookMongodbRepository implements IBookRepository {
     author: string;
     ownerId?: string;
   }): Promise<Book> {
-    // Lógica para agregar un libro a la base de datos
-    // Crear el nuevo libro en MongoDB
     const newBook = new BookModel({
       title,
       description,
       price,
       author,
-      ownerId: ownerId || '000000000000000000000000', // ID temporal hasta tener auth
+      ownerId: ownerId || '000000000000000000000000',
       status: 'PUBLISHED',
     });
 
-    // Guardarlo en la base de datos
     const savedBook = await newBook.save();
 
-    // Convertir el documento de Mongoose a entidad de dominio
     return new Book({
       id: savedBook._id.toString(),
       title: savedBook.title,

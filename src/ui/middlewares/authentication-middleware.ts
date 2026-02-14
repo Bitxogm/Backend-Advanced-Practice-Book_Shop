@@ -1,4 +1,3 @@
-// Extiende el tipo Request para incluir la propiedad user
 export interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
